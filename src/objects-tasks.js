@@ -165,16 +165,49 @@ function makeWord(lettersObject) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  // if (queue[0] !== 25) return false;
-  // const cash = {
-  //   25: 0,
-  //   50: 0,
-  //   100: 0,
-  // };
-  // function changeFrom50(){}
-  // function changeFrom50(){}
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let change = true;
+  if (queue[0] > 25) return false;
+  const cash = {
+    25: 0,
+    50: 0,
+    100: 0,
+  };
+
+  function changeFrom50() {
+    if (cash[25] <= 0) change = false;
+    cash[25] -= 1;
+    cash[50] += 1;
+    return 1;
+  }
+
+  function changeFrom100() {
+    if (cash[50] <= 0 && cash[25] < 3) change = false;
+    if (cash[50] > 0) {
+      cash[50] -= 1;
+      changeFrom50();
+    } else cash[25] -= 3;
+    cash[100] += 1;
+    return 1;
+  }
+  for (let i = 0; i < queue.length; i += 1) {
+    const coin = queue[i];
+    switch (true) {
+      case coin === 25:
+        cash[25] += 1;
+        break;
+      case coin === 50:
+        changeFrom50();
+        break;
+      case coin === 100:
+        changeFrom100();
+        break;
+      default:
+        break;
+    }
+  }
+
+  return change;
 }
 
 /**
@@ -190,8 +223,10 @@ function sellTickets(/* queue */) {
  *    console.log(r.height);      // => 20
  *    console.log(r.getArea());   // => 200
  */
-function Rectangle(/* width, height */) {
-  throw new Error('Not implemented');
+function Rectangle(width, height) {
+  this.width = width;
+  this.height = height;
+  this.getArea = () => this.width * this.height;
 }
 
 /**
