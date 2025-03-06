@@ -339,8 +339,22 @@ function sortCitiesArray(arr) {
  *    "Poland" => ["Lodz"]
  *   }
  */
-function group(/* array, keySelector, valueSelector */) {
-  throw new Error('Not implemented');
+function group(array, keySelector, valueSelector) {
+  const resultMap = new Map();
+
+  function addElement(object, map, index) {
+    const mapKey = keySelector(array[index]);
+    const mapVal = valueSelector(array[index]);
+    if (map.has(mapKey)) {
+      const arr = map.get(mapKey);
+      arr.push(mapVal);
+    } else map.set(mapKey, new Array(mapVal));
+  }
+  for (let i = 0; i < array.length; i += 1) {
+    const obj = array[i];
+    addElement(obj, resultMap, i);
+  }
+  return resultMap;
 }
 
 /**
